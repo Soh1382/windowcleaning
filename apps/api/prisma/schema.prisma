@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  role         String    @default("CUSTOMER") // CUSTOMER, STAFF, ADMIN
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  customer     Customer?
+  staffJobs    Job[]     @relation("AssignedStaff")
+  auditLogs    AuditLog[]
+}
+
+model Customer {
+  id               String    @id @default(uuid())
+  userId           String?   @unique
+  user             User?     @relation(fields: [userId], references: [id])
+  name             String
+  email            String?
+  phone            String?
+  preferredContact String    @default("EMAIL") // EMAIL, PHONE, SMS
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  addresses        Address[]
+  quotes           Quote[]
+  jobs             Job[]
+  invoices         Invoice[]
+  reviews          Review[]
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  line1      String
+  line2      String?
+  city       String
+  postcode   String
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  quotes     Quote[]
+  jobs       Job[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  basePrice   Float?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  quoteItems  QuoteItem[]
+  jobItems    JobItem[]
+}
+
+model Quote {
+  id          String      @id @default(uuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id])
+  addressId   String
+  address     Address     @relation(fields: [addressId], references: [id])
+  status      String      @default("NEW") // NEW, SENT, ACCEPTED, DECLINED
+  frequency   String?     // ONE_OFF, WEEKLY_4, WEEKLY_8
+  detailsJson String?     // e.g. windows count
+  totalPrice  Float?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  items       QuoteItem[]
+}
+
+model QuoteItem {
+  id        String  @id @default(uuid())
+  quoteId   String
+  quote     Quote   @relation(fields: [quoteId], references: [id])
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+  notes     String?
+}
+
+model Job {
+  id             String    @id @default(uuid())
+  customerId     String
+  customer       Customer  @relation(fields: [customerId], references: [id])
+  addressId      String
+  address        Address   @relation(fields: [addressId], references: [id])
+  assignedStaffId String?
+  assignedStaff  User?     @relation("AssignedStaff", fields: [assignedStaffId], references: [id])
+  status         String    @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  scheduledStart DateTime?
+  scheduledEnd   DateTime?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  items          JobItem[]
+  invoices       Invoice[]
+  reviews        Review[]
+}
+
+model JobItem {
+  id        String  @id @default(uuid())
+  jobId     String
+  job       Job     @relation(fields: [jobId], references: [id])
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+  notes     String?
+}
+
+model Invoice {
+  id            String    @id @default(uuid())
+  customerId    String
+  customer      Customer  @relation(fields: [customerId], references: [id])
+  jobId         String? // Can be linked to a job or standalone
+  job           Job?      @relation(fields: [jobId], references: [id])
+  invoiceNumber String    @unique
+  subtotal      Float
+  tax           Float
+  total         Float
+  status        String    @default("DUE") // DUE, PAID, VOID
+  issuedAt      DateTime  @default(now())
+  dueAt         DateTime
+  createdAt     DateTime  @default(now())
+
+  payments      Payment[]
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  provider    String   // STRIPE, CASH, TRANSFER
+  providerRef String?
+  amount      Float
+  status      String   @default("COMPLETED")
+  createdAt   DateTime @default(now())
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  jobId       String?
+  job         Job?     @relation(fields: [jobId], references: [id])
+  rating      Int
+  text        String?
+  displayName String?
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  title        String
+  content      String
+  excerpt      String?
+  coverImage   String?
+  status       String   @default("DRAFT") // DRAFT, PUBLISHED
+  publishedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GalleryImage {
+  id          String   @id @default(uuid())
+  url         String
+  caption     String?
+  serviceTag  String?
+  beforeAfterGroupId String?
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  meta      String?
+  createdAt DateTime @default(now())
+}
