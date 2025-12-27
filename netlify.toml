@@ -1,10 +1,13 @@
 [build]
   base = "/"
-  command = "npm run build --workspaces --if-present"
+  # Explicitly build shared (if needed) then web
+  # But npm run build -w web should handle its dependencies if scripts are set up correctly
+  # Or simply chain them to be safe and avoid API build failures
+  command = "npm run build -w @aquamarine/shared && npm run build -w web"
   publish = "apps/web/dist"
 
 [context.production]
-  command = "npm run build --workspaces --if-present"
+  command = "npm run build -w @aquamarine/shared && npm run build -w web"
 
 [[redirects]]
   from = "/*"
