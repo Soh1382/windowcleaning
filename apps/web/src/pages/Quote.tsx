@@ -210,7 +210,7 @@ export default function Quote() {
                   <div>
                     <h3 className="text-sm font-bold text-secondary-500 uppercase tracking-wider mb-2">Service Plan</h3>
                     <ul className="list-disc list-inside text-primary-700 font-medium">
-                      {formData.serviceTypes?.map(s => <li key={s}>{s}</li>)}
+                      {formData.serviceTypes?.map((s: string) => <li key={s}>{s}</li>)}
                     </ul>
                     <p className="mt-2 text-secondary-600">Frequency: <span className="font-medium">{formData.frequency?.replace('_', ' ')}</span></p>
                   </div>

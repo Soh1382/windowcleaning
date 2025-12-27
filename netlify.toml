@@ -1,0 +1,12 @@
+[build]
+  base = "/"
+  command = "npm run build --workspaces --if-present"
+  publish = "apps/web/dist"
+
+[context.production]
+  command = "npm run build --workspaces --if-present"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
