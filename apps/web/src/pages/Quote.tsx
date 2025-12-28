@@ -74,7 +74,7 @@ export default function Quote() {
     <div className="bg-secondary-50 min-h-screen py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-secondary-900 text-center">Get a Free Instant Quote</h1>
+
           <div className="flex justify-between items-center mt-8 px-4">
             {STEPS.map((step, index) => (
               <div key={index} className="flex flex-col items-center relative z-10">

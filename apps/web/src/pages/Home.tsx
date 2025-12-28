@@ -180,20 +180,29 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary-600 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready for Sparkling Clean Windows?</h2>
-          <p className="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-primary-600">
+           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+           <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+           <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2"></div>
+        </div>
+        
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight drop-shadow-sm">
+            Ready for Sparkling Clean Windows?
+          </h2>
+          <p className="text-primary-50 text-xl md:text-2xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
             Get an instant price estimate online and book your first clean in under 60 seconds.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/quote">
-              <Button size="lg" className="bg-white text-primary-600 hover:bg-secondary-50 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row justify-center gap-5">
+            <Link to="/quote" className="group">
+              <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 w-full sm:w-auto px-8 py-4 text-lg font-bold shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
                 Get Instant Quote
+                <span className="inline-block transition-transform group-hover:translate-x-1 ml-2">→</span>
               </Button>
             </Link>
             <Link to="/contact">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-2 border-primary-200 text-white hover:bg-white/10 w-full sm:w-auto px-8 py-4 text-lg font-semibold backdrop-blur-sm">
                 Contact Us
               </Button>
             </Link>
