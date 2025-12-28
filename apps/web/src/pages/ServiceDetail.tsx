@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import serviceHeaderBg from '../assets/service_header_bg.png';
 
@@ -87,7 +87,9 @@ const ServiceDetail = () => {
           <div className="flex flex-col justify-center items-center bg-secondary-50 p-8 rounded-xl">
             <h3 className="text-xl font-bold mb-4">Ready to book?</h3>
             <p className="text-center text-secondary-600 mb-6">Get a free, no-obligation quote in minutes.</p>
-            <Button size="lg" className="w-full">Get a Quote Now</Button>
+            <Link to="/quote" className="w-full">
+              <Button size="lg" className="w-full">Get a Quote Now</Button>
+            </Link>
           </div>
         </div>
       </div>
